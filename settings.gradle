@@ -1,0 +1,1 @@
+include 'vehicles-service', 'vehicles-rest', 'vehicles-console', 'vehiles-frontend'
