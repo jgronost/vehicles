@@ -12,23 +12,41 @@ group = 'prv.jgronost'
 
 subprojects {
 
-    apply plugin: 'groovy'
-
     repositories {
         mavenLocal()
         mavenCentral()
     }
 
     dependencies {
-        groovy 'org.codehaus.groovy:groovy-all:2.2.1.'
+        groovy 'org.codehaus.groovy:groovy-all:2.2.1'
         testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+        compile 'commons-logging:commons-logging:1.1.3'
+        
     }
+    
+    sourceSets{
+        main {
+            java { srcDirs = []}
+            groovy { srcDir 'src'}
+        }
+        test {
+            java { srcDirs = []}
+            groovy { srcDir 'src'}
+        }
+
+    }
+    buildDir = 'target'
+    
+
 }
 
 project(':vehicles-service') {
-
     dependencies {
         compile 'org.springframework:spring-core:3.2.6.RELEASE'
+    }
+    task( helloWorld, dependsOn: 'classes', type: JavaExec ) {
+        main = 'prv.jgronost.vehicles.Hello'
+        classpath = sourceSets.main.runtimeClasspath
     }
 }
 
