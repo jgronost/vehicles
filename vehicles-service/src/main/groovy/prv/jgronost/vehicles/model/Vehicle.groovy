@@ -1,13 +1,19 @@
 package prv.jgronost.vehicles.model
 
+import groovy.transform.EqualsAndHashCode;
+import org.bson.types.ObjectId
+
+@EqualsAndHashCode (excludes = "_id")
 abstract class Vehicle {
-	String brand
-	String model
-	String description
-	String colour
+	ObjectId _id;
+	String type;
+	String brand;
+	String model;
+	String description;
+	String colour;
 	// in m/s
-	double accleraton
-	double maxSpeed
+	double accleraton;
+	double maxSpeed;
 	
 
 }
