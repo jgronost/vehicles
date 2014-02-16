@@ -1,12 +1,19 @@
 package prv.jgronost.vehicles.dao
 
+import java.util.ArrayList;
+
 import org.bson.types.ObjectId;
 
 import prv.jgronost.vehicles.model.Bicycle;
+import prv.jgronost.vehicles.model.Vehicle;
 
 import com.gmongo.GMongo
 import com.mongodb.DB
+import com.mongodb.DBCursor
+import com.sun.org.apache.bcel.internal.generic.RETURN;
+import org.springframework.stereotype.Repository
 
+@Repository
 class VehiclesDaoImpl implements VehiclesDao {
 	static String dbName = 'vehiclesDB'
 	GMongo gMongo 
@@ -44,6 +51,17 @@ class VehiclesDaoImpl implements VehiclesDao {
 	
 	def DB getDb(){
 		DB db = gMongo.getDB(dbName)
+	}
+
+	@Override
+	public ArrayList<Vehicle> listVehicles() {
+		def DB db = getDb();
+		DBCursor cursor = db.vehicles.find()
+		List<Vehicle> vehicles = new ArrayList<Vehicle>()
+		while (cursor.hasNext()){
+			vehicles << cursor.next()
+		}
+		return vehicles
 	}
 	
 	

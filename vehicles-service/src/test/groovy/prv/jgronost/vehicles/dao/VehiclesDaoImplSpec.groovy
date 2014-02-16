@@ -3,7 +3,9 @@ package prv.jgronost.vehicles.dao
 import com.gmongo.GMongo
 import org.bson.types.ObjectId
 import prv.jgronost.vehicles.model.Bicycle
+import prv.jgronost.vehicles.model.Vehicle
 import spock.lang.Specification;
+import javax.annotation.Resource;
 
 class VehiclesDaoImplSpec extends Specification {
 	GMongo gMongo;
@@ -61,9 +63,34 @@ class VehiclesDaoImplSpec extends Specification {
 		foundBicycle2 != foundBicycle
 		foundBicycle2 == bicycle2
 		foundBicycle2 != bicycle
-
-
 	
+	}
+	
+	def 'save and retrieve vehicles - Bicycles as for now'(){
+		given:
+		def brand = 'bicycle_brand_2'
+		def model = 'bicycle_model_2'
+		def id = new ObjectId();
+		def id_2 = new ObjectId();
+		Bicycle bicycle = new Bicycle(_id: id, brand: brand, model: model)
+		Bicycle bicycle2 = new Bicycle(_id: id_2, brand: brand+3, model: model+3)
+		VehiclesDao dao = new VehiclesDaoImpl(gMongo: gMongo)
+		dao.saveBicycle(bicycle)
+		dao.saveBicycle(bicycle2)
+
+		
+		when:
+		ArrayList<Vehicle> vehicles = dao.listVehicles()
+		
+		then:
+		vehicles != null
+		vehicles.size == 2
+		vehicles.each{ 
+			it._id != null
+			it.brand.empty != true
+			it.model.empty != true
+		}
+		
 	}
 	
 	
