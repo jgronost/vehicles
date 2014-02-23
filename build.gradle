@@ -30,6 +30,8 @@ subprojects {
     }
     
     sourceSets{
+		buildDir = 'target'
+		
         main {
             java { srcDirs = []}
             groovy { srcDir 'src'}
@@ -41,22 +43,25 @@ subprojects {
         }
 		
 		
-//		integrationTest {
-//			compileClasspath = sourceSets.main.output + configurations.testRuntime
-//			runtimeClasspath = output + sourceSets.main.output + configurations.testRuntime
-//			groovy {
-//				srcDir 'src/integrationTest/groovy'
-//			}
-//		}
+		integrationTest {
+			
+			compileClasspath = sourceSets.main.output + configurations.testRuntime
+			runtimeClasspath = output + sourceSets.main.output + configurations.testRuntime
+			groovy {
+				srcDir 'src/integrationTest/groovy'
+			}
+			resources {
+				srcDir 'src/integrationTest/resources'
+			}
+		}
 
     }
-    buildDir = 'target'
+    
 	
-//	task integrationTest(type: Test) {
-//		sourceSets.integrationTest.runtimeClasspath.each {println(it)}
-//		testClassesDir = sourceSets.integrationTest.output.classesDir
-//		classpath = sourceSets.integrationTest.runtimeClasspath
-//	  }
+	task integrationTest(type: Test) {
+		testClassesDir = sourceSets.integrationTest.output.classesDir
+		classpath += sourceSets.integrationTest.runtimeClasspath
+	}
 	
 
 }
@@ -66,8 +71,9 @@ project(':vehicles-service') {
 	def springVersion = '3.2.6.RELEASE'
     dependencies {
         groovy "org.springframework:spring-context:$springVersion"
-		testCompile "org.spockframework:spock-spring:$spockVersion"
-		testCompile "org.springframework:spring-test:$springVersion"
+		groovy "org.spockframework:spock-spring:$spockVersion"
+		groovy "org.springframework:spring-test:$springVersion"
+		groovy "org.springframework:spring-tx:$springVersion"
 		groovy 'com.gmongo:gmongo:1.2'
 		
     }

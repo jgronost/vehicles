@@ -18,4 +18,14 @@
 	<context:component-scan base-package="prv.jgronost.vehicles" />
 	<tx:annotation-driven/>
 	
+	<bean name="vehiclesDao" class="prv.jgronost.vehicles.dao.VehiclesDaoImpl">
+		<property name="gMongo">
+			<bean class="com.gmongo.GMongo">
+				<constructor-arg>
+					<value>localhost:27017</value>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+
 </beans>	

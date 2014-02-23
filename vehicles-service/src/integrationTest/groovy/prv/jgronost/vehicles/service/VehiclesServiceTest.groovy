@@ -4,6 +4,8 @@ import javax.annotation.Resource;
 
 import org.bson.types.ObjectId
 import org.springframework.context.annotation.*;
+import org.springframework.beans.factory.annotation.*
+import org.springframework.test.context.ContextConfiguration
 
 import com.gmongo.GMongo;
 
@@ -12,7 +14,7 @@ import prv.jgronost.vehicles.model.Bicycle
 import prv.jgronost.vehicles.model.Vehicle
 import spock.lang.Specification;
 
-@Configuration("classpath: applicationContext.xml")
+@ContextConfiguration(locations = "file:target/resources/integrationTest/applicationContext.xml")
 public class VehiclesServiceTest extends Specification {
 	
 	GMongo gMongo;
@@ -22,10 +24,10 @@ public class VehiclesServiceTest extends Specification {
 		gMongo.getDB('vehiclesDB').dropDatabase()
 	}
 	
-	@Resource
+	@Autowired
 	VehiclesDao vehiclesDao;
 	
-	@Resource
+	@Autowired
 	VehiclesService vehiclesService;
 	
 	def 'dependencies are injected'(){
