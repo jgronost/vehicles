@@ -1,6 +1,6 @@
 allprojects {
 task hello << { task -> println "I'm $task.project.name" }
-apply plugin: 'eclipse'
+
 apply plugin:'groovy'
 apply plugin:'java'
 apply plugin:'application'
@@ -8,13 +8,15 @@ apply plugin:'application'
 version = '1.0-SNAPSHOT'
 group = 'prv.jgronost'
 
-
-
 }
 
 subprojects {
+	apply plugin: 'eclipse'
 
     repositories {
+    	maven {
+    		url "http://maven.nykreditnet.net"
+    	}
         mavenLocal()
         mavenCentral()
     }
@@ -34,11 +36,11 @@ subprojects {
 		
         main {
             java { srcDirs = []}
-            groovy { srcDir 'src'}
+            groovy { srcDirs = ['src/main/java', 'src/main/groovy'] }
         }
         test {
             java { srcDirs = []}
-            groovy { srcDir 'src/test'}
+            groovy { srcDirs = ['src/test/java', 'src/test/groovy'] }
 			
         }
 		
@@ -54,7 +56,9 @@ subprojects {
 				srcDir 'src/integrationTest/resources'
 			}
 		}
-
+		
+		
+		 
     }
     
 	
@@ -63,6 +67,8 @@ subprojects {
 		classpath += sourceSets.integrationTest.runtimeClasspath
 	}
 	
+
+
 
 }
 
@@ -84,8 +90,15 @@ project(':vehicles-service') {
 }
 
 project(':vehicles-rest') {
+	def spockVersion = '0.7-groovy-2.0'
+	def springVersion = '3.2.6.RELEASE'
 
     dependencies {
+		groovy project(':vehicles-service')
+		groovy 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.0'
+		groovy 'org.glassfish.jersey.media:jersey-media-json-jackson:2.0'
+		//runtime "com.h2database:h2:1.3.148"
+		testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.6'
         
     }
 }
