@@ -90,6 +90,8 @@ project(':vehicles-service') {
 }
 
 project(':vehicles-rest') {
+    apply plugin: 'war'
+    apply plugin: 'jetty'
 	def spockVersion = '0.7-groovy-2.0'
 	def springVersion = '3.2.6.RELEASE'
 
@@ -104,11 +106,7 @@ project(':vehicles-rest') {
 		testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.6'
         
     }
-	
-	task( runServer, dependsOn: 'classes', type: JavaExec ) {
-        main = 'prv.jgronost.vehicles.rest.VehiclesApplication'
-        classpath = sourceSets.main.runtimeClasspath
-    }
+
 }
 
 project(':vehicles-console') {
