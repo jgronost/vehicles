@@ -14,7 +14,7 @@ import prv.jgronost.vehicles.model.Bicycle
 import prv.jgronost.vehicles.model.Vehicle
 import spock.lang.Specification;
 
-@ContextConfiguration(locations = "file:target/resources/integrationTest/applicationContext.xml")
+@ContextConfiguration(locations = "file:target/resources/integrationTest/serviceContext.xml")
 public class VehiclesServiceTest extends Specification {
 	
 	GMongo gMongo;

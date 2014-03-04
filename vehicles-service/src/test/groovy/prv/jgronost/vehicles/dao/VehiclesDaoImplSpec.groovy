@@ -15,9 +15,9 @@ class VehiclesDaoImplSpec extends Specification {
 		gMongo.getDB(VehiclesDaoImpl.dbName).dropDatabase()
 	}
 	
-	def cleanup(){
-		gMongo.getDB(VehiclesDaoImpl.dbName).dropDatabase()
-	}
+//	def cleanup(){
+//		gMongo.getDB(VehiclesDaoImpl.dbName).dropDatabase()
+//	}
 	
 	def 'saveBicycle and findBicycle by brand+model '(){
 		given:
