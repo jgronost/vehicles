@@ -1,3 +1,4 @@
+// http://www.jroller.com/DhavalDalal/entry/ant_or_maven_umm_no
 allprojects {
 task hello << { task -> println "I'm $task.project.name" }
 
@@ -94,6 +95,9 @@ project(':vehicles-rest') {
     apply plugin: 'jetty'
 	def spockVersion = '0.7-groovy-2.0'
 	def springVersion = '3.2.6.RELEASE'
+	jettyRun {
+		httpPort = 8081
+	}
 
     dependencies {
 		groovy project(':vehicles-service')
@@ -116,11 +120,43 @@ project(':vehicles-console') {
     }
 }
 
-project(':vehiles-frontend') {
-
+project(':vehicles-web') {
     apply plugin: 'war'
+    apply plugin: 'jetty'
+	
+	jettyRun {
+		httpPort = 8080
+	}
 
     dependencies {
-        compile project(':vehicles-rest')
+		groovy 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.3'
+		groovy 'org.glassfish.grizzly:grizzly-http-servlet:2.3'
+		testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.6'
     }
+}
+
+
+task startMongo(description:'Starts the Mongo DB Server') << {
+	startMongoDB()
+}
+ 
+task stopMongo(description:'Stops the Mongo DB Server') << {
+	stopMongoDB()
+}
+ 
+def startMongoDB() {
+	//def cmdString = ['mongod', '--port', dbPort, '--dbpath', dbDir, '--auth'].join(' ')
+	def cmdString = ['mongod'].join(' ')
+	println "Starting Mongo Database...$cmdString"
+	new Thread().start {
+	"$cmdString".execute()
+	}
+}
+ 
+def stopMongoDB() {
+	Process process = 'mongo admin'.execute()
+	def out = process.outputStream
+	out.withWriter { writer ->
+	writer.write('db.shutdownServer()')
+	}
 }

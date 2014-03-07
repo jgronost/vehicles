@@ -7,7 +7,9 @@ gradle eclipse
 gradle cleanEclipse
 
 #to run jetty
-gradle runJetty
+gradle :vehicles-rest:jettyRun
+and type in browser: http://localhost:8081/vehicles-rest/vehicles
 
-# and type in browser: http://localhost:8080/vehicles-rest/vehicles
-
+#then in separate window
+gradle :vehicles-web:jettyRun
+http://localhost:8080/vehicles-web

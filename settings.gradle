@@ -1,1 +1,1 @@
-include 'vehicles-service', 'vehicles-rest', 'vehicles-console', 'vehiles-frontend'
+include 'vehicles-service', 'vehicles-rest', 'vehicles-console', 'vehicles-web'
