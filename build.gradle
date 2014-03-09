@@ -9,6 +9,23 @@ apply plugin:'application'
 version = '1.0-SNAPSHOT'
 group = 'prv.jgronost'
 
+task startMongoDB << {
+	//def cmdString = ['mongod', '--port', dbPort, '--dbpath', dbDir, '--auth'].join(' ')
+	def cmdString = ['mongod'].join(' ')
+	println "Starting Mongo Database...$cmdString"
+	new Thread().start {
+	"$cmdString".execute()
+	}
+}
+
+task stopMongoDB << {
+	Process process = 'mongo admin'.execute()
+	def out = process.outputStream
+	out.withWriter { writer ->
+	writer.write('db.shutdownServer()')
+	}
+}
+
 }
 
 subprojects {
@@ -44,10 +61,9 @@ subprojects {
             groovy { srcDirs = ['src/test/java', 'src/test/groovy'] }
 			
         }
-		
+
 		
 		integrationTest {
-			
 			compileClasspath = sourceSets.main.output + configurations.testRuntime
 			runtimeClasspath = output + sourceSets.main.output + configurations.testRuntime
 			groovy {
@@ -57,19 +73,8 @@ subprojects {
 				srcDir 'src/integrationTest/resources'
 			}
 		}
-		
-		
-		 
     }
-    
-	
-	task integrationTest(type: Test) {
-		testClassesDir = sourceSets.integrationTest.output.classesDir
-		classpath += sourceSets.integrationTest.runtimeClasspath
-	}
-	
-
-
+      
 
 }
 
@@ -84,10 +89,16 @@ project(':vehicles-service') {
 		groovy 'com.gmongo:gmongo:1.2'
 		
     }
+    
     task( helloWorld, dependsOn: 'classes', type: JavaExec ) {
         main = 'prv.jgronost.vehicles.Hello'
         classpath = sourceSets.main.runtimeClasspath
     }
+    
+     test{
+        dependsOn 'startMongoDB'
+    }
+
 }
 
 project(':vehicles-rest') {
@@ -98,7 +109,7 @@ project(':vehicles-rest') {
 	jettyRun {
 		httpPort = 8081
 	}
-
+    
     dependencies {
 		groovy project(':vehicles-service')
 		groovy 'org.eclipse.jetty:jetty-servlet:9.1.2.v20140210'
@@ -108,9 +119,12 @@ project(':vehicles-rest') {
 		groovy 'org.glassfish.jersey.media:jersey-media-json-jackson:2.3'
 		//runtime "com.h2database:h2:1.3.148"
 		testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.6'
-        
     }
-
+    
+    test{
+        dependsOn ':vehicles-service:test'
+        finalizedBy 'stopMongoDB'
+    }
 }
 
 project(':vehicles-console') {
@@ -133,30 +147,4 @@ project(':vehicles-web') {
 		groovy 'org.glassfish.grizzly:grizzly-http-servlet:2.3'
 		testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.6'
     }
-}
-
-
-task startMongo(description:'Starts the Mongo DB Server') << {
-	startMongoDB()
-}
- 
-task stopMongo(description:'Stops the Mongo DB Server') << {
-	stopMongoDB()
-}
- 
-def startMongoDB() {
-	//def cmdString = ['mongod', '--port', dbPort, '--dbpath', dbDir, '--auth'].join(' ')
-	def cmdString = ['mongod'].join(' ')
-	println "Starting Mongo Database...$cmdString"
-	new Thread().start {
-	"$cmdString".execute()
-	}
-}
- 
-def stopMongoDB() {
-	Process process = 'mongo admin'.execute()
-	def out = process.outputStream
-	out.withWriter { writer ->
-	writer.write('db.shutdownServer()')
-	}
 }
