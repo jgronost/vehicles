@@ -19,9 +19,14 @@ class VehiclesResourceTest extends Specification {
 	RESTClient client = new RESTClient('http://localhost:1234/', ContentType.JSON);
 
 	
-	void setup(){
+	void setupSpec(){
 		server = GrizzlyHttpServerFactory.createHttpServer('http://localhost:1234/'.toURI(), new VehiclesApplication())
 	}
+	
+	void cleanupSpec(){
+		server.stop();
+	}
+
 	
 	def 'server is running'() {
 		expect: server.started
